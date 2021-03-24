@@ -10,6 +10,10 @@ function TodoList(){
         .then(data => data.json())
         .then(dbData => {
             setTodos(dbData);
+        })
+        .catch(err => {
+            console.log(err);
+            alert('No Tasks found');
         });
     })
     const createTask = async event => {
@@ -25,7 +29,11 @@ function TodoList(){
             body: JSON.stringify({"todo": task})
         })
         .then(data => data.json())
-        .then(todo => console.log(todo));
+        .then(todo => console.log(todo))
+        .catch(err => {
+            console.log(err);
+            alert('Cannot create task');
+        });
 
         
     }
@@ -34,8 +42,20 @@ function TodoList(){
         setTask(event.target.value);
     }
 
-    const deleteTask = (event) => {
-        event.preventDefault();
+    const deleteTask = (id) => {
+        fetch(`http://localhost:3001/api/tasks/${id}`, {
+            method: "DELETE",
+        })
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => {
+            console.log(err);
+            alert('Cannot delete task');
+        });  
+    }
+
+    const editTask = (id) => {
+        
     }
 
     return (
@@ -44,7 +64,7 @@ function TodoList(){
             <input type="text" placeholder='Enter new task' onChange={handleChange}/>
             <button type="submit">Create Task</button>
         </form>
-        <div>{todos.map(todo => <div key={todo.id}><h4>{todo.todo}</h4><button onClick={deleteTask}>Delete</button><button>Edit</button></div>)}</div>
+        <div>{todos.map(todo => <div key={todo.id}><h4>{todo.todo}</h4><button type="button" onClick={() => deleteTask(todo.id)}>Delete</button><button type="button" onClick={() => editTask(todo.id)}>Edit</button></div>)}</div>
         </>
     )
 }
