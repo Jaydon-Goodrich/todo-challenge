@@ -2,7 +2,7 @@ const { Task } = require('../models');
 
 const TaskController = {
     //create new task
-    createTask({ params, body }, res) {
+    createTask({ body }, res) {
         Task.create(body)
             .then(taskData => {
                 if(!taskData){
