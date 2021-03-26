@@ -48,7 +48,7 @@ const TodoItem = (props) => {
 
     return (
         isEdit ? <div><input type="text" onChange={handleChange}/><button onClick={() => saveTask(props.todoId)}>Save</button><button>Cancel</button></div> 
-        : <div><h4>{props.todo}</h4><button type="button" onClick={() => editTask(props.todoId, props.todo)}>Edit</button><button type="button" onClick={() => deleteTask(props.todoId)}>Delete</button></div>
+        : <div><h4>{props.todo}</h4><h4>Status: {props.status}</h4><button type="button" onClick={() => editTask(props.todoId, props.todo)}>Edit</button><button type="button" onClick={() => deleteTask(props.todoId)}>Delete</button></div>
     );
 }
 

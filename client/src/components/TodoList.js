@@ -5,6 +5,7 @@ import TodoItem from './TodoItem';
 function TodoList(){
     const [todos, setTodos] = useState([]);
     const [task, setTask] = useState('');
+    const [status, setStatus] = useState('');
 
     useEffect(() => {
         fetch('http://localhost:3001/api/tasks')
@@ -14,12 +15,13 @@ function TodoList(){
         })
         .catch(err => {
             console.log(err);
-            alert('No Tasks found');
+            
         });
     })
     const createTask = async event => {
         event.preventDefault();
         event.target.reset();
+
 
         fetch('http://localhost:3001/api/tasks', {
             method: "POST",
@@ -27,7 +29,7 @@ function TodoList(){
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"todo": task})
+            body: JSON.stringify({"todo": task, "status": status})
         })
         .then(data => data.json())
         .then(todo => console.log(todo))
@@ -40,7 +42,10 @@ function TodoList(){
     }
 
     const handleChange = (event) => {
-        setTask(event.target.value);
+        let taskValue = document.getElementById('task-input');
+        setTask(taskValue.value);
+        let statusValue = document.getElementById('status');
+        setStatus(statusValue.value);
     }
 
 
@@ -49,10 +54,17 @@ function TodoList(){
     return (
         <>
         <form onSubmit={createTask} id="add-task">
-            <input type="text" placeholder='Enter new task' onChange={handleChange}/>
+            <input type="text" placeholder='Enter new task' id="task-input"/>
+            <br/>
+            <label htmlFor="status">Choose a status:</label>
+            <select name="status" id="status" onChange={handleChange}>
+            <option value="Not Started">Not Started</option>
+            <option value="Pending">Pending</option>
+            <option value="Complete">Complete</option>
+            </select>
             <button type="submit">Create Task</button>
         </form>
-        <div>{todos.map(todo => <TodoItem key={todo.id} todo={todo.todo} todoId={todo.id} />)}</div>
+        <div>{todos.map(todo => <TodoItem key={todo.id} todo={todo.todo} todoId={todo.id} status={todo.status} />)}</div>
         </>
     )
 }
